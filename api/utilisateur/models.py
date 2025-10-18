@@ -1,59 +1,54 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import uuid
 
-class Utilisateur(models.Model):
-    ROLE_CHOICES = [
+def generate_id_user():
+    return uuid.uuid4().hex[:10]
+
+class UtilisateurManager(BaseUserManager):
+    def create_user(self, email, motDePasse=None, role='client', nom=None, **extra_fields):
+        if not email:
+            raise ValueError("L'utilisateur doit avoir un email")
+        email = self.normalize_email(email)
+        user = self.model(email=email, nom=nom, role=role, **extra_fields)
+        user.set_password(motDePasse)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, motDePasse, nom="Admin", **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, motDePasse, nom=nom, role='admin', **extra_fields)
+
+class Utilisateur(AbstractBaseUser, PermissionsMixin):
+    id_user = models.CharField(primary_key=True, max_length=10, editable=False, default=generate_id_user)
+    nom = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=20, choices=[
         ('client', 'Client'),
         ('vendeur', 'Vendeur'),
         ('admin', 'Administrateur')
-    ]
+    ])
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
-    id_user = models.CharField(primary_key=True, max_length=10, editable=False)
-    nom = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    motDePasse = models.CharField(max_length=128)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    objects = UtilisateurManager()
 
-    class Meta:
-        verbose_name = "Utilisateur"
-        verbose_name_plural = "Utilisateurs"
-
-    def save(self, *args, **kwargs):
-        # Générer l'id_user si ce n'est pas défini
-        if not self.id_user:
-            last_user = Utilisateur.objects.order_by('id_user').last()
-            if not last_user:
-                self.id_user = "USR001"
-            else:
-                user_num = int(last_user.id_user.replace("USR", "")) + 1
-                self.id_user = f"USR{user_num:03d}"
-
-        is_new = self._state.adding
-        super().save(*args, **kwargs)
-
-        # Création automatique de l'entrée associée
-        if is_new:
-            if self.role == "client":
-                Client.objects.create(utilisateur=self)
-            elif self.role == "vendeur":
-                Vendeur.objects.create(utilisateur=self)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nom']
 
     def __str__(self):
         return f"{self.nom} ({self.role})"
 
+    @property
+    def id(self):
+        return self.id_user
 
-class Client(models.Model):
-    utilisateur = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, primary_key=True)
+# --- Héritage réel ---
+class Client(Utilisateur):
     adresse = models.CharField(max_length=255, blank=True)
     telephone = models.CharField(max_length=20, blank=True)
 
-    def __str__(self):
-        return self.utilisateur.nom
-
-
-class Vendeur(models.Model):
-    utilisateur = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, primary_key=True)
+class Vendeur(Utilisateur):
     entreprise = models.CharField(max_length=255, blank=True)
     contact = models.CharField(max_length=20, blank=True)
-
-    def __str__(self):
-        return self.utilisateur.nom

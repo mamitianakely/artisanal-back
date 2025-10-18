@@ -1,5 +1,4 @@
 from django.db import models
-from api.utilisateur.models import Client
 
 def generate_commande_id():
     last_commande = Commande.objects.order_by('id_commande').last()
@@ -13,7 +12,12 @@ class Commande(models.Model):
     dateCommande = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=50)
     total = models.FloatField()
-    id_user = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='commandes')
+    # ✅ on remplace l'import direct par une référence différée :
+    id_user = models.ForeignKey(
+        "utilisateur.Client",  # <--- référence en chaîne
+        on_delete=models.CASCADE,
+        related_name="commandes"
+    )
 
     class Meta:
         verbose_name = "Commande"

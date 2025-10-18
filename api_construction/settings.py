@@ -36,7 +36,10 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'api.produit',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
 ]
 
 MIDDLEWARE = [
@@ -84,7 +87,7 @@ WSGI_APPLICATION = 'api_construction.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'artisanal',
+        'NAME': 'art',
         'USER': 'postgres',
         'PASSWORD': 'mamy',
         'HOST': 'localhost',
@@ -93,10 +96,30 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+
+    'USER_ID_FIELD': 'id_user',       # ton champ personnalisé
+    'USER_ID_CLAIM': 'id_user',
+}
+
+
+AUTH_USER_MODEL = 'utilisateur.Utilisateur'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

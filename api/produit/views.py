@@ -9,8 +9,7 @@ class ProduitViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-     # Associer automatiquement le produit au vendeur connecté
-        serializer.save(id_user=self.request.user.vendeur)
+        serializer.save(id_user=self.request.user)
 
     # Pour tester sans authentification
     #def perform_create(self, serializer):

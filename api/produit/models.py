@@ -1,6 +1,6 @@
 from django.db import models
 from api.category.models import Category
-from api.utilisateur.models import Vendeur
+from api.utilisateur.models import Utilisateur
 
 def generate_produit_id():
     last_produit = Produit.objects.order_by('id_produit').last()
@@ -18,7 +18,7 @@ class Produit(models.Model):
     image = models.ImageField(upload_to='produits/', blank=True, null=True)
     datePublication = models.DateTimeField(auto_now_add=True)
     id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='produits')
-    id_user = models.ForeignKey(Vendeur, on_delete=models.CASCADE, related_name='produits')
+    id_user = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='produits')  # ← ici
 
     class Meta:
         verbose_name = "Produit"
