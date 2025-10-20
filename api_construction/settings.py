@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'api.commande',
     'api.ligneCommande',
     'api.payement',
+    'api.promotion',
     'api.apps.ApiConfig',
     'api.produit',
     'rest_framework',
