@@ -12,12 +12,12 @@ class Commande(models.Model):
     dateCommande = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=50)
     total = models.FloatField()
-    # ✅ on remplace l'import direct par une référence différée :
     id_user = models.ForeignKey(
-        "utilisateur.Client",  # <--- référence en chaîne
+        "utilisateur.Utilisateur",  # <-- au lieu de Client
         on_delete=models.CASCADE,
         related_name="commandes"
     )
+
 
     class Meta:
         verbose_name = "Commande"
