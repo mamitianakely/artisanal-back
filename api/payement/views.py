@@ -74,3 +74,5 @@ def get_commande_validee(request, id_commande):
         'statut': commande.statut,
         'dateCommande': commande.dateCommande,
     })
+
+

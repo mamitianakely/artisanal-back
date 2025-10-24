@@ -10,4 +10,5 @@ urlpatterns = [
     path('payement/', include('api.payement.urls')),
     path('promotion/', include('api.promotion.urls')),
     path('notification/', include('api.notification.urls')),
+    path('administrateur/', include('api.administrateur.urls')),
 ]
