@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Commande
 from .serializers import CommandeSerializer
+from api.notification.models import Notification
 
 class CommandeViewSet(viewsets.ModelViewSet):
     queryset = Commande.objects.all()
@@ -44,6 +45,15 @@ class CommandeViewSet(viewsets.ModelViewSet):
         commande = self.get_object()
         commande.statut = 'Validée'
         commande.save()
+
+        # 🟡 AJOUT : Créer une notification pour le client
+        Notification.objects.create(
+            user=commande.id_user,
+            commande=commande,
+            message="Votre commande a été validée. Veuillez procéder au paiement pour obtenir la marchandise.",
+            type="validation"
+        )
+
         return Response({"message": "Commande validée avec succès."}, status=status.HTTP_200_OK)
 
     # 🟥 Action personnalisée pour refuser une commande
@@ -56,4 +66,14 @@ class CommandeViewSet(viewsets.ModelViewSet):
         commande = self.get_object()
         commande.statut = 'Refusée'
         commande.save()
+
+        # 🟡 AJOUT : Créer une notification pour le client
+        Notification.objects.create(
+            user=commande.id_user,
+            commande=commande,
+            message="Désolé, votre commande a été refusée.",
+            type="refus"
+        )
+
+
         return Response({"message": "Commande refusée avec succès."}, status=status.HTTP_200_OK)

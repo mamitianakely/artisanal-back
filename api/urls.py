@@ -9,4 +9,5 @@ urlpatterns = [
     path('lignecommande/', include('api.ligneCommande.urls')),
     path('payement/', include('api.payement.urls')),
     path('promotion/', include('api.promotion.urls')),
+    path('notification/', include('api.notification.urls')),
 ]
