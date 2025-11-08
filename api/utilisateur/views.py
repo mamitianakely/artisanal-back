@@ -39,3 +39,27 @@ class VendeurViewSet(viewsets.ModelViewSet):
     queryset = Vendeur.objects.all()
     serializer_class = VendeurSerializer
     permission_classes = [IsAuthenticated]
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def utilisateurs_par_role(request, role):
+    """
+    Retourne tous les utilisateurs selon le rôle : 'client' ou 'vendeur'
+    """
+    users = Utilisateur.objects.filter(role=role)
+    serializer = UtilisateurSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me_vendeur(request):
+    user = request.user
+    if user.role != 'vendeur':
+        return Response({"detail": "Non autorisé"}, status=403)
+    return Response({
+        "id": user.id,
+        "nom": user.nom,
+        "email": user.email,
+        "role": user.role,
+    })

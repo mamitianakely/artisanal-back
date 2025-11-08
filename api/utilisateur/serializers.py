@@ -34,10 +34,14 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ['utilisateur', 'adresse', 'telephone']
 
 class VendeurSerializer(serializers.ModelSerializer):
-    utilisateur = UtilisateurSerializer(read_only=True)
+    nom = serializers.CharField(source='utilisateur_ptr.nom', read_only=True)
+    email = serializers.EmailField(source='utilisateur_ptr.email', read_only=True)
+    role = serializers.CharField(source='utilisateur_ptr.role', read_only=True)
+
     class Meta:
         model = Vendeur
-        fields = ['utilisateur', 'entreprise', 'contact']
+        fields = ['id_user', 'nom', 'email', 'role', 'entreprise', 'contact']
+
 
 # Token serializer (ajoute role et id_user au payload de réponse)
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
