@@ -10,6 +10,12 @@ def generate_produit_id():
     return f"PRD{produit_num:03d}"
 
 class Produit(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente'),
+        ('validee', 'Validée'),
+        ('refusee', 'Refusée'),
+    ]
+
     id_produit = models.CharField(primary_key=True, max_length=10, editable=False)
     nomProduit = models.CharField(max_length=255)
     descriptionProduit = models.TextField(blank=True)
@@ -17,8 +23,9 @@ class Produit(models.Model):
     quantite = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='produits/', blank=True, null=True)
     datePublication = models.DateTimeField(auto_now_add=True)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='produits')
-    id_user = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='produits')  # ← ici
+    id_user = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='produits')
 
     class Meta:
         verbose_name = "Produit"

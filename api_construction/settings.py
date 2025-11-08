@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.notification',
     'api.administrateur',
+    'api.notifvendeur',
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',

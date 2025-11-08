@@ -11,4 +11,5 @@ urlpatterns = [
     path('promotion/', include('api.promotion.urls')),
     path('notification/', include('api.notification.urls')),
     path('administrateur/', include('api.administrateur.urls')),
+    path('notifvendeur/', include('api.notifvendeur.urls')),
 ]
