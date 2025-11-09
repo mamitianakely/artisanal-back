@@ -35,7 +35,7 @@ class CommandeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
-    # 🟩 Action personnalisée pour valider une commande
+    # Action personnalisée pour valider une commande
     @action(detail=True, methods=['patch'], url_path='valider')
     def valider_commande(self, request, pk=None):
         user = request.user
@@ -56,7 +56,7 @@ class CommandeViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "Commande validée avec succès."}, status=status.HTTP_200_OK)
 
-    # 🟥 Action personnalisée pour refuser une commande
+    # Action personnalisée pour refuser une commande
     @action(detail=True, methods=['patch'], url_path='refuser')
     def refuser_commande(self, request, pk=None):
         user = request.user

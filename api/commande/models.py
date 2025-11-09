@@ -13,7 +13,7 @@ class Commande(models.Model):
     statut = models.CharField(max_length=50)
     total = models.FloatField()
     id_user = models.ForeignKey(
-        "utilisateur.Utilisateur",  # <-- au lieu de Client
+        "utilisateur.Utilisateur",
         on_delete=models.CASCADE,
         related_name="commandes"
     )

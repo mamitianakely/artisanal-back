@@ -16,3 +16,6 @@ class ProduitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produit
         fields = '__all__'
+        extra_kwargs = {
+            'image': {'required': False, 'allow_null': True},  # Permet l'image optionnelle
+        }

@@ -8,6 +8,4 @@ class LigneCommandeViewSet(viewsets.ModelViewSet):
     serializer_class = LigneCommandeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    #def perform_create(self, serializer):
-        #serializer.save(id_produit=self.request.user.produit)
-        #serializer.save(id_commande=self.request.user.commande)
+

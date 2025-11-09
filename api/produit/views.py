@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .models import Produit
 from .serializers import ProduitSerializer
-from api.notifvendeur.models import NotifVendeur  # Import de la notification
+from api.notifvendeur.models import NotifVendeur
 
 class ProduitViewSet(viewsets.ModelViewSet):
     queryset = Produit.objects.all().order_by('-datePublication')
@@ -24,7 +24,7 @@ class ProduitViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        # 🔹 Création automatique de la notification si le statut change
+        # Création automatique de la notification si le statut change
         new_statut = serializer.instance.statut
         if old_statut != new_statut:
             if new_statut == "validee":
