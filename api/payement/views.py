@@ -75,4 +75,13 @@ def get_commande_validee(request, id_commande):
         'dateCommande': commande.dateCommande,
     })
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_paiement(request, id_commande):
+    """
+    Vérifie si une commande est déjà payée.
+    """
+    is_paid = Payement.objects.filter(id_commande=id_commande).exists()
+    return Response({"isPaid": is_paid})
+
 
